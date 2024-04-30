@@ -302,6 +302,7 @@ section {
   align-items: center;
   justify-content: center;
   color: antiquewhite;
+  font-weight: bold;
 }
 
 .pagination a {
@@ -318,6 +319,7 @@ option {
   padding: 0.5rem;
   border: 1px solid #00695c;
   margin: 0 1rem;
+  font-weight: bold;
 }
 
 .pagination a:hover,

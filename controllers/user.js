@@ -24,8 +24,8 @@ exports.postSignup = async (req, res, next) => {
     const registered = await user.save();
     console.log(`Registered User: ${registered}`);
 
-    res.redirect("/dashboard");
-    // sendWelcomeMail(user.email, user.userName);
+    res.redirect("/allBooks");
+    sendWelcomeMail(user.email, user.userName);
 
     // res.status(201).send({ user, token });
   } catch (error) {
