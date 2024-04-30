@@ -1,0 +1,51 @@
+  <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css" />
+  </head>
+  
+  <body>
+    <%- include('../includes/displaybooks.ejs') %>
+       
+    <main>
+      <% if(products.length > 0) { %>
+      <div class="grid">
+        <% for(let product of products) { %>
+        <article class="card product-item">
+          <header class="card__header">
+            <h1 class="product__title"><%= product.title %></h1>
+          </header>
+          <div class="card__image">
+          <img
+            src="data:image/png;base64,<%= product.cover %>"
+            alt="<%= product.title %>"
+          />
+        </div>
+          <div class="card__content">
+            <h2 class="product__author"><%= product.author%></h2>
+           
+          </div>
+          <div class="card__actions">
+            
+            <% if (product.owner.toString() === owner._id.toString()) { %>
+            <a href='/userBook/<%= product._id %>' class="btn">View More</a>
+              
+              <a href='/edit-book/<%= product._id %>?edit=true' class="btn">Edit</a>
+              <a href='/delete-book/<%= product._id %>' class="btn">Delete</a>
+              <% } else {%>
+                <a href='/book-detail/<%= product._id %>' class="btn">View More</a>
+                <form action="/add-to-library" method="post">
+  <button class="btn" type="submit">Request Exchange</button>
+  <input type="hidden" name="productId" value="<%= product._id %>" />
+</form>
+    <% } %>
+          </div>
+      
+        </article>
+        <% } %>
+      </div>
+      <% } else { %>
+      <h1>No Books Found</h1>
+      <% } %>
+    </main>
+    <%- include('../includes/page.ejs', {currentPage: currentPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage , query:query}) %>
+    <script src="/js/page.js"></script>
+ <%- include('../includes/end.ejs') %>

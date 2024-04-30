@@ -1,0 +1,36 @@
+<section class="pagination">
+  <label for="itemsPerPage">Rows per page: </label>
+  <select
+    id="itemsPerPage"
+    name="itemsPerPage"
+    onchange="changeItemsPerPage(this)"
+  >
+    <option value="3">3</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+  </select>
+
+  <% if (hasPreviousPage) { %>
+  <a href="/searchHomeBooks?page=<%= previousPage %>&query=<%= query %>"
+    ><%= previousPage %></a
+  >
+  <% } %>
+
+  <a
+    href="/searchHomeBooks?page=<%= currentPage %>&query=<%= query %>"
+    class="active"
+    ><%= currentPage %></a
+  >
+
+  <% if (hasNextPage) { %>
+  <a href="/searchHomeBooks?page=<%= nextPage %>&query=<%= query %>"
+    ><%= nextPage %></a
+  >
+  <% } %> <% if (currentPage !== lastPage && nextPage !== lastPage) { %>
+  <a href="/searchHomeBooks?page=<%= lastPage %>&query=<%= query %>"
+    ><%= lastPage %></a
+  >
+  <% } %>
+</section>

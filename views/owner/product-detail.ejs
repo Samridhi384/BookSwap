@@ -1,0 +1,46 @@
+ <%- include('../includes/head.ejs') %>
+  </head>
+
+  <body>
+    <%- include('../includes/displaybooks.ejs') %>
+      <div class="back__link">
+       <a href='/allBooks' class="btn">Back</a>
+     </div>
+    <main class="centered">
+        <h1><%= product.title %></h1>
+        <hr>
+           <div class="image">
+          <img
+            src="data:image/png;base64,<%= product.cover %>"
+            alt="<%= product.title %>"
+          />
+        </div>
+        <h2><%= product.author %></h2>
+        <h3>Genre : <%= product.genre %></h3>
+        <p>Purchased Year is : <%= product.purchased_year %></p>
+
+        <div class="card__actions">
+            <% if (product.owner.toString() !== owner._id.toString()) { %>
+              <% if (product.isAvailable) { %>
+                <%- include('../includes/exchange.ejs') %> 
+                <% } else { %> 
+                  <a href='/chat/<%= product.owner %>/<%= product._id %>' class="btn" id="join-chat">Chat With Owner</a>
+             <a href='/delete-lib-book/<%= product._id %>' class="btn">Finish Exchange</a>   
+                <% } %>
+          <% } %>
+          </div>
+         
+        
+         
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+
+      <script>
+        const socket = io();
+document.querySelector("#join-chat").addEventListener("click", () => {
+  const username = "<%= owner.userName %>";
+  socket.emit("joined", username);
+});
+      </script>
+
+ <%- include('../includes/end.ejs') %>

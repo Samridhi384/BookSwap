@@ -1,0 +1,52 @@
+<!-- <nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <span class="page-link">Previous</span>
+    </li>
+    <li class="page-item active" aria-current="page">
+      <span class="page-link">1</span>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
+ -->
+
+<section class="pagination">
+  <label for="itemsPerPage">Rows per page: </label>
+  <select
+    id="itemsPerPage"
+    name="itemsPerPage"
+    onchange="changeItemsPerPage(this)"
+  >
+    <option value="3">3</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+  </select>
+
+  <% if (hasPreviousPage) { %>
+  <a href="/searchBooks?page=<%= previousPage %>&query=<%= query %>"
+    ><%= previousPage %></a
+  >
+  <% } %>
+
+  <a
+    href="/searchBooks?page=<%= currentPage %>&query=<%= query %>"
+    class="active"
+    ><%= currentPage %></a
+  >
+
+  <% if (hasNextPage) { %>
+  <a href="/searchBooks?page=<%= nextPage %>&query=<%= query %>"
+    ><%= nextPage %></a
+  >
+  <% } %> <% if (currentPage !== lastPage && nextPage !== lastPage) { %>
+  <a href="/searchBooks?page=<%= lastPage %>&query=<%= query %>"
+    ><%= lastPage %></a
+  >
+  <% } %>
+</section>

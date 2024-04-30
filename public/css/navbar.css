@@ -1,0 +1,5 @@
+.sticky {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  z-index: 1000 !important;
+}

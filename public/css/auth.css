@@ -1,0 +1,13 @@
+.login-form {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+  display: block;
+}
+
+h1 {
+  justify-content: center;
+  text-align: center;
+  color: antiquewhite !important;
+  font-weight: bold !important;
+}

@@ -1,0 +1,28 @@
+ <%- include('../includes/head.ejs') %>
+  </head>
+
+  <body>
+    <%- include('../includes/navigation.ejs') %>
+     <div class="back__link">
+       <a href='/' class="btn">Back</a>
+     </div>
+    <main class="centered">
+        <h1><%= product.title %></h1>
+        <hr>
+           <div class="image">
+          <img
+            src="data:image/png;base64,<%= product.cover %>"
+            alt="<%= product.title %>"
+          />
+        </div>
+        <h2><%= product.author %></h2>
+        <h3>Genre : <%= product.genre %></h3>
+        <p>Purchased Year is : <%= product.purchased_year %></p>
+       <div class="card__actions">
+            <a href='/login' class="btn">Chat With Owner</a>
+            <a href='/login' class="btn">Request Exchange</a>
+          </div>
+        
+    </main>
+    
+ <%- include('../includes/end.ejs') %>

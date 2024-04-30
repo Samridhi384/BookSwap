@@ -1,0 +1,133 @@
+<script>
+  // Connect to Socket.IO server
+  const socket = io();
+
+  // Handle form submission
+  document.querySelector("#message-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = e.target.elements.message.value;
+    const senderId = "<%= owner._id %>";
+    const senderName = "<%= owner.userName %>";
+    const recieverId = "<%= recieverId %>";
+    const createdAt = new Date().getTime();
+    socket.emit("sendMessage", {
+      message,
+      senderId,
+      senderName,
+      recieverId,
+      createdAt,
+    });
+    e.target.elements.message.value = "";
+  });
+
+  socket.on(
+    "newMessage",
+    async ({ message, senderId, senderName, recieverId, createdAt }) => {
+      const messagesDiv = document.querySelector("#messages");
+      const messageElement = document.createElement("div");
+
+      if (senderId === "<%= owner._id %>") {
+        messageElement.classList.add("message", "message__sender");
+        messageElement.innerHTML = `
+    <div class="message__content-wrapper"> 
+      <div class="message__contented">
+       <span class="message__sender-text">You</span>
+       <span class="message__timestamp">${moment(createdAt).format(
+         " h:mm a"
+       )}</span>
+    </div>
+      <p class="message__content">${message}</p>
+    </div>
+    `;
+      } else {
+        messageElement.classList.add("message", "message__reciever");
+        messageElement.innerHTML = `
+    <div class="message__content-wrapper">
+         <div class="message__contented">
+       <span class="message__sender-text">${senderName}</span>
+       <span class="message__timestamp">${moment(createdAt).format(
+         " h:mm a"
+       )}</span>
+    </div>
+      <p class="message__content">${message}</p>
+    </div>
+    `;
+      }
+      messagesDiv.appendChild(messageElement);
+    }
+  );
+
+  // Handle location button click
+  document.querySelector("#send-location").addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      return alert("Geolocation is not supported by your browser.");
+    }
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      const createdAt = new Date().getTime();
+      const senderId = "<%= owner._id %>";
+      const senderName = "<%= owner.userName %>";
+
+      socket.emit(
+        "sendLocation",
+        { latitude, longitude },
+        createdAt,
+        senderId,
+        senderName
+      );
+    });
+  });
+
+  // Listen for new location messages
+  socket.on("newLocationMessage", (coords, createdAt, senderId, senderName) => {
+    const messagesDiv = document.querySelector("#messages");
+    const messageElement = document.createElement("div");
+
+    if (senderId === "<%= owner._id %>") {
+      messageElement.classList.add("message", "message__sender");
+      messageElement.innerHTML = `
+    <div class="message__content-wrapper"> 
+      <div class="message__contented">
+       <span class="message__sender-text">You</span>
+       <span class="message__timestamp">${moment(createdAt).format(
+         " h:mm a"
+       )}</span>
+    </div>
+       <a href="https://www.google.com/maps?q=${coords.latitude},${
+        coords.longitude
+      }">My Current Location</a>
+    </div>
+    `;
+    } else {
+      messageElement.classList.add("message", "message__reciever");
+      messageElement.innerHTML = `
+    <div class="message__content-wrapper">
+      <div class="message__reciever-text">${senderName}</div>
+      <a href="https://www.google.com/maps?q=${coords.latitude},${coords.longitude}">My Current Location</a>
+    </div>
+    `;
+    }
+
+    messagesDiv.appendChild(messageElement);
+  });
+
+  socket.on("newUserJoined", (username) => {
+    const messageDiv = document.querySelector("#messages");
+    messageDiv.innerHTML += `
+       <p><br>${username} has joined.</p> 
+  `;
+  });
+
+  document.querySelector("#leave-chat").addEventListener("click", () => {
+    const username = "<%= owner.userName %>";
+    socket.emit("leaveChat", username);
+  });
+
+  socket.on("userLeft", (username) => {
+    const messageDiv = document.querySelector("#messages");
+    messageDiv.innerHTML += `  
+       <p><br>${username} has left.</p>
+  `;
+  });
+</script>

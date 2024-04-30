@@ -1,0 +1,66 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+<%- include('../includes/displaybooks.ejs') %>
+
+<main class="center">
+  <div class="chat">
+    <div id="sidebar" class="chat__sidebar">
+      <h1><%= product.title %></h1>
+      <hr>
+      <div class="images">
+        <img
+          src="data:image/png;base64,<%= product.cover %>"
+          alt="<%= product.title %>"
+        />
+      </div>
+      <h2><%= product.author %></h2>
+      <h4>Genre : <%= product.genre %></h4>
+      <h5>Purchased Year is : <%= product.purchased_year %></h5>
+
+      <div class="card__actions">
+        <% if (product.isAvailable) { %>
+          <%- include('../includes/exchange.ejs') %>
+        <% } else { %>
+          <a href='/delete-lib-book/<%= product._id %>' class="btn">Finish Exchange</a>
+        <% } %>
+      </div>
+      <!-- <button class="btn" id="join-chat">Join The Chat</button> -->
+      <div class="card__actions">
+        <a href='/add-to-library' class="leave" id="leave-chat">Leave the Chat</a>
+      </div>
+    </div>
+
+    <div class="chat__main" id>
+      <div class="owner">
+        <h3>Welcome <%= owner.userName %></h3>
+      </div>
+      <div id="messages" class="chat__messages">
+      </div>
+
+      <div class="compose">
+        <form action='' id="message-form">
+          <input
+            type="text"
+            name="message"
+            placeholder="Message"
+            required
+            autocomplete="off"
+          />
+          <button type="submit">Send</button>
+        </form>
+        <button id="send-location">Send Location</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Include Socket.IO client library and client-side script -->
+<script src="/socket.io/socket.io.js"></script>
+<%- include('./chatJS.ejs') %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+</body>
+</html>

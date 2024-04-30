@@ -1,0 +1,64 @@
+  <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css" />
+  </head>
+  
+  <body>
+    <%- include('../includes/displaybooks.ejs') %>
+      <div class="back__link">
+       <a href='/add-books' class="btn">Back</a>
+     </div>
+    <main>
+      <% if(products.length > 0) { %>
+      <div class="grid">
+        <% for(let product of products) { %>
+        <article class="card product-item">
+          <header class="card__header">
+            <h1 class="product__title"><%= product.title %></h1>
+          </header>
+           <div class="card__image">
+          <img
+            src="data:image/png;base64,<%= product.cover %>"
+            alt="<%= product.title %>"
+          />
+        </div>
+          <div class="card__content">
+            <h2 class="product__author"><%= product.author %></h2>
+          </div>
+          <div class="card__actions">
+            <a href='/userBook/<%= product._id %>' class="btn">View</a>
+            <a href='/edit-book/<%= product._id %>?edit=true' class="btn">Edit</a>
+            <a href='/delete-book/<%= product._id %>' class="btn">Delete</a>
+            
+          </div>
+          <div class="card__actions">
+            <% if (product.isAvailable) { %>
+              <h3>
+                Status :- Not Exchanged
+              </h3>
+                <% } else { %> 
+                  <h3> Status :- Exchanged </h3>    
+             <!-- <button id="join-chat"> -->
+              <a href="/chat/<%= product.exchanged_userId %>/<%= product._id %>" class="btn" id="join-chat">Chat With Exchanger</a>  
+             <!-- </button> -->
+                <% } %>
+          </div>
+      
+        </article>
+        <% } %>
+      </div>
+      <% } else { %>
+      <h1>No Books Found</h1>
+      <% } %>
+    </main> 
+    <script src="/socket.io/socket.io.js"></script>
+      <script>
+        const socket = io();
+        document.querySelector("#join-chat").addEventListener("click", () => {
+        const username = "<%= owner.userName %>";
+        socket.emit("joined", username);  
+       });
+      </script>
+    
+
+ <%- include('../includes/end.ejs') %>
+

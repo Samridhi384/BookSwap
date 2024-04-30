@@ -1,0 +1,64 @@
+  <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css" />
+  </head>
+  
+  <body>
+    <%- include('../includes/displaybooks.ejs') %>
+
+    <main>
+      <% if(products.length > 0) { %>
+        <% if(length === 1)  { %>
+        <div class="product__description">
+           <h3><%= length %> Book Found</h3>
+        </div>
+        <% } else { %>
+        <div class="product__description">
+           <h3><%= length %> Books Found</h3>
+        </div>
+        <% } %>
+      <div class="grid">
+        <% for(let product of products) { %>
+        <article class="card product-item">
+          <header class="card__header">
+            <h1 class="product__title"><%= product.title %></h1>
+          </header>
+          <div class="card__image">
+          <img
+            src="data:image/png;base64,<%= product.cover %>"
+            alt="<%= product.title %>"
+          />
+        </div>
+          <div class="card__content">
+            <h2 class="product__author"><%= product.author%></h2>       
+          </div>
+        <div class="card__actions">
+            
+            <% if (product.owner.toString() === owner._id.toString()) { %>
+                <a href='/userBook/<%= product._id %>' class="btn">View More</a>     
+                <a href='/edit-book/<%= product._id %>?edit=true' class="btn">Edit</a>
+                <a href='/delete-book/<%= product._id %>' class="btn">Delete</a>
+    <% } else {%>
+                <a href='/book-detail/<%= product._id %>' class="btn">View More</a>
+                <% if(product.isAvailable === true) { %> 
+                    <%- include('../includes/exchange.ejs' , {product: product}) %>
+                <% } else { %>
+                    <a href='/delete-lib-book/<%= product._id %>' class="btn">Finish Exchange</a>
+                <% } %>
+    <% } %>
+          </div>
+        </article>
+        <% } %>
+      </div>
+      <% } else if (query === "") { %>
+        <h1>Please provide a vaild search query</h1>
+      <% } else { %>
+      <h1>No Books Found</h1>
+      <% } %>
+        
+      <%- include('../includes/pagination.ejs', {currentPage: currentPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage , query:query}) %>
+      <script src="/js/pagination.js"></script>
+  
+    </main>
+
+
+ <%- include('../includes/end.ejs') %>
