@@ -1,8 +1,12 @@
-const { sendWelcomeMail } = require("../src/email/account");
+const {
+  sendWelcomeMail,
+  sendResetPasswordMail,
+} = require("../src/email/account");
 const User = require("../src/models/user");
 const Book = require("../src/models/book");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
@@ -191,6 +195,89 @@ exports.deleteLibBook = async (req, res) => {
     res.redirect("/allBooks");
   } catch (error) {
     res.status(500).send();
+    console.log(error);
+  }
+};
+
+exports.getForgotPassword = async (req, res) => {
+  try {
+    res.render("auth/forgot-password", {
+      pageTitle: "Forgot Password",
+      path: "/forgot-password",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.postForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      console.log("user does not exist");
+    }
+
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+
+    sendResetPasswordMail(user.email, resetToken);
+
+    // console.log(`Reset token for ${email}: ${resetToken}`);
+    await user.save();
+    res.status(200).redirect("/after-forgot-password");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.afterForgotPassword = async (req, res) => {
+  res.render("auth/after-forgot-pass", {
+    pageTitle: "Forgot Password",
+    path: "/after-forgot-password",
+  });
+};
+
+exports.getResetPassword = async (req, res) => {
+  const token = req.params.token;
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiration: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+  res.render("auth/reset-password", {
+    pageTitle: "Reset Password",
+    path: "/reset-password",
+    token,
+  });
+};
+
+exports.postResetPassword = async (req, res) => {
+  try {
+    const token = req.params.token;
+    const newPassword = req.body;
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    user.password = newPassword.password;
+    user.resetToken = undefined;
+    user.resetTokenExpiration = undefined;
+
+    await user.save();
+    res.status(200).redirect("/login");
+  } catch (error) {
     console.log(error);
   }
 };

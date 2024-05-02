@@ -26,4 +26,15 @@ router.get("/delete-lib-book/:id", auth, userController.deleteLibBook);
 // router.get("/dashboard", auth, userController.dashboard);
 // router.get("/users", auth, userController.getUserProfile);
 
+//forget password
+router.get("/forgot-password", userController.getForgotPassword);
+
+router.post("/forgot-password", userController.postForgotPassword);
+
+router.get("/after-forgot-password", userController.afterForgotPassword);
+
+router.get("/reset-password/:token", userController.getResetPassword);
+
+router.post("/reset-password/:token", userController.postResetPassword);
+
 module.exports = router;

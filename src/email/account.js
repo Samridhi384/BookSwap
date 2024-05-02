@@ -14,6 +14,17 @@ const sendWelcomeMail = (email, name) => {
   });
 };
 
+const sendResetPasswordMail = (email, token) => {
+  sgMail.send({
+    to: email,
+    from: process.env.FROM_EMAIL,
+    subject: "Reset your password",
+    text: `Dear User,
+              As per your request this is link to reset password http://localhost:5000/reset-password/${token} Link is valid for 1 hour.`,
+  });
+};
+
 module.exports = {
   sendWelcomeMail,
+  sendResetPasswordMail,
 };
