@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
     // const token = req.header("Authorization");
     // const token = req.cookies.token;
     const s = req.headers.cookie;
-    const token = s.substring(6);
+    const token = s.split("token=")[1].split(";")[0].trim();
     // console.log(token);
     if (!token) {
       throw new Error("token not found");

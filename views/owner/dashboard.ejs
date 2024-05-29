@@ -33,19 +33,19 @@
               <% } else {%>
                 <a href='/book-detail/<%= product._id %>' class="btn">View More</a>
                 <form action="/add-to-library" method="post">
-  <button class="btn" type="submit">Request Exchange</button>
-  <input type="hidden" name="productId" value="<%= product._id %>" />
-</form>
-    <% } %>
-          </div>
-      
-        </article>
-        <% } %>
-      </div>
-      <% } else { %>
-      <h1>No Books Found</h1>
-      <% } %>
-    </main>
+                <button class="btn" type="submit">Request Exchange</button>
+                <input type="hidden" name="productId" value="<%= product._id %>" />
+          </form>
+              <% } %>
+                    </div>
+                
+                  </article>
+                  <% } %>
+                </div>
+                <% } else { %>
+                <h1>No Books Found</h1>
+                <% } %>
+              </main>
     <%- include('../includes/page.ejs', {currentPage: currentPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage , query:query}) %>
     <script src="/js/page.js"></script>
  <%- include('../includes/end.ejs') %>
